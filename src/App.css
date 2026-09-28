@@ -396,6 +396,102 @@ a {
   pointer-events: none;
   animation: section-pad-idle 4.2s ease-in-out infinite;
 }
+.hero-particles,
+.section::after,
+.site-footer::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      circle at 8% 32%,
+      rgba(255, 235, 246, 0.95) 0 1px,
+      rgba(255, 0, 127, 0.45) 2px,
+      transparent 7px
+    ),
+    radial-gradient(
+      circle at 24% 77%,
+      rgba(255, 205, 232, 0.9) 0 1px,
+      rgba(255, 0, 127, 0.36) 2px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 39% 27%,
+      rgba(255, 235, 246, 0.88) 0 1px,
+      rgba(255, 22, 136, 0.4) 2px,
+      transparent 8px
+    ),
+    radial-gradient(
+      circle at 52% 88%,
+      rgba(255, 205, 232, 0.9) 0 1px,
+      rgba(255, 0, 127, 0.38) 2px,
+      transparent 7px
+    ),
+    radial-gradient(
+      circle at 69% 48%,
+      rgba(255, 235, 246, 0.94) 0 1px,
+      rgba(255, 0, 127, 0.42) 2px,
+      transparent 9px
+    ),
+    radial-gradient(
+      circle at 83% 19%,
+      rgba(255, 205, 232, 0.88) 0 1px,
+      rgba(255, 22, 136, 0.36) 2px,
+      transparent 7px
+    ),
+    radial-gradient(
+      circle at 94% 72%,
+      rgba(255, 235, 246, 0.9) 0 1px,
+      rgba(255, 0, 127, 0.4) 2px,
+      transparent 8px
+    );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  content: "";
+  --particle-dim: 0.24;
+  --particle-glow: 0.68;
+  opacity: var(--particle-dim);
+  pointer-events: none;
+  animation: particle-drift 8s ease-in-out infinite;
+}
+.hero-particles {
+  background-position: center;
+}
+.hero-particles {
+  animation-delay: -1s;
+}
+.profile-section::after {
+  animation-delay: -2.2s;
+}
+.showcase-section::after {
+  animation-delay: -3.4s;
+}
+.journal-section::after {
+  animation-delay: -4.6s;
+}
+.site-footer::after {
+  animation-delay: -5.8s;
+}
+.section::after,
+.site-footer::after {
+  content: "";
+}
+.section > *,
+.site-footer > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes particle-drift {
+  0%,
+  100% {
+    opacity: var(--particle-dim);
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: var(--particle-glow);
+    transform: translate3d(0, -10px, 0);
+  }
+}
 .hero-section::before {
   animation-delay: -0.4s;
 }
@@ -868,6 +964,7 @@ a {
 }
 .hero-scroll {
   position: absolute;
+  z-index: 2;
   right: max(28px, calc((100vw - 1240px) / 2));
   bottom: 56px;
   display: flex;

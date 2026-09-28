@@ -19,6 +19,7 @@ export default function Hero() {
     >
       <div aria-hidden="true" className="hero-light" />
       <div aria-hidden="true" className="hero-grid" />
+      <div aria-hidden="true" className="hero-particles" />
       <div className="hero-copy">
         <motion.p
           animate={{ opacity: 1, y: 0 }}
