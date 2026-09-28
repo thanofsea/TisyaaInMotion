@@ -6,6 +6,7 @@ const links = [
   ["Profil", "#profile"],
   ["Showcase", "#showcase"],
   ["Jurnal", "#journal"],
+  ["Disco Lab", "#disco-lab"],
 ];
 
 export default function DancerNav() {
@@ -57,7 +58,7 @@ export default function DancerNav() {
               </a>
             ))}
             <a href="#contact" onClick={() => setMenuOpen(false)}>
-              <span>04</span>Kontak
+              <span>05</span>Kontak
             </a>
           </motion.nav>
         )}

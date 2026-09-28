@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 import BeatIntro from "./components/BeatIntro";
 import CustomCursor from "./components/CustomCursor";
+import DiscoBallGate from "./components/DiscoBallGate";
 import DancerNav from "./components/DancerNav";
 import EqualizerFooter from "./components/EqualizerFooter";
 import Hero from "./components/Hero";
@@ -32,6 +33,7 @@ function App() {
 
   function makeRipple(event) {
     if (!event.target.closest("a, button")) return;
+    if (event.target.closest(".disco-stage, .disco-controls")) return;
     const id = Date.now() + Math.random();
     setSparks((current) => [
       ...current,
@@ -75,6 +77,7 @@ function App() {
             <ProfileSection />
             <VideoShowcase />
             <JournalSection />
+            <DiscoBallGate />
           </main>
           <EqualizerFooter />
           <AnimatePresence>
