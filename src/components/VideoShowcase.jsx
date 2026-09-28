@@ -9,13 +9,13 @@ const videos = [
     number: "01",
   },
   {
-    title: "Kill This Love",
+    title: "SADISTIC",
     type: "OFFICIAL MUSIC VIDEO",
     id: "YpVjU4OJ4Ms",
     number: "02",
   },
   {
-    title: "Pink Venom",
+    title: "OMG",
     type: "OFFICIAL MUSIC VIDEO",
     id: "sVTy_wmn5SU",
     number: "03",
