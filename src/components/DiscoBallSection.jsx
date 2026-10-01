@@ -70,7 +70,7 @@ function paintGlowTiles(canvas, colors, beatPhase, isOn) {
   const rows = canvas.height / tileSize;
   const columns = canvas.width / tileSize;
 
-  context.fillStyle = "#09070b";
+  context.fillStyle = "#f4f1f6";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex += 1) {
@@ -85,8 +85,8 @@ function paintGlowTiles(canvas, colors, beatPhase, isOn) {
       );
       const rowColor = colors[(rowIndex + columnIndex) % colors.length];
       const isLit = isOn && (wave > 0.38 || flicker > 0.75);
-      context.fillStyle = isLit ? rowColor : "#171119";
-      context.globalAlpha = isLit ? 0.9 : 0.26;
+      context.fillStyle = isLit ? rowColor : "#ffffff";
+      context.globalAlpha = isLit ? 0.92 : 0.18;
       context.fillRect(x + 1, y + 1, tileSize - 2, tileSize - 2);
     }
   }
