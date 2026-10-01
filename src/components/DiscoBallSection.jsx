@@ -90,6 +90,7 @@ export default function DiscoBallSection() {
     let isDisposed = false;
     let lightRig;
     let discoBall;
+    let discoAura;
     let spotlights = [];
     let beams = [];
     const disposableResources = [];
@@ -115,7 +116,7 @@ export default function DiscoBallSection() {
         const color = settings.colors[index];
         spotlight.color.set(color);
         spotlight.intensity = settings.isOn
-          ? 16 * settings.brightness * pulse
+          ? 5.5 * settings.brightness * pulse
           : 0;
         beams[index].material.color.set(color);
         beams[index].material.opacity = settings.isOn
@@ -124,8 +125,19 @@ export default function DiscoBallSection() {
       });
 
       if (discoBall) {
-        discoBall.material.emissive.set(settings.isOn ? "#38202f" : "#111016");
-        discoBall.material.emissiveIntensity = settings.isOn ? 0.35 : 0.12;
+        const glowColor = settings.colors[0];
+        discoBall.material.emissive.set(settings.isOn ? glowColor : "#1a1117");
+        discoBall.material.emissiveIntensity = settings.isOn
+          ? settings.brightness * (0.65 + beatPhase * 0.2)
+          : 0.08;
+      }
+
+      if (discoAura) {
+        const auraColor = settings.colors[0];
+        discoAura.material.color.set(settings.isOn ? auraColor : "#0d090d");
+        discoAura.material.opacity = settings.isOn
+          ? 0.18 + settings.brightness * 0.28 + (Math.cos(beatPhase) + 1) * 0.12
+          : 0;
       }
     }
 
@@ -238,6 +250,20 @@ export default function DiscoBallSection() {
         floorRing.position.y = -1.35;
         scene.add(floorRing);
         disposableResources.push(floorRingGeometry, floorRingMaterial);
+
+        const auraGeometry = new SphereGeometry(1.34, 32, 24);
+        const auraMaterial = new MeshBasicMaterial({
+          color: "#ff1688",
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+          blending: AdditiveBlending,
+          side: DoubleSide,
+        });
+        discoAura = new Mesh(auraGeometry, auraMaterial);
+        discoAura.position.copy(discoBall.position);
+        scene.add(discoAura);
+        disposableResources.push(auraGeometry, auraMaterial);
 
         const target = new Vector3(0, 0.25, 0);
         const lightOrigins = [
