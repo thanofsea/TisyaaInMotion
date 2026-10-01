@@ -133,6 +133,7 @@ export default function DiscoBallSection() {
     let lightRig;
     let discoBall;
     let glowTexture;
+    let softRing;
     let glowLights = [];
     let spotlights = [];
     let beams = [];
@@ -196,6 +197,16 @@ export default function DiscoBallSection() {
           settings.isOn,
         );
         glowTexture.needsUpdate = true;
+      }
+
+      if (softRing) {
+        const ringColor = settings.colors[0];
+        softRing.material.color.set(settings.isOn ? ringColor : "#0c090d");
+        softRing.material.opacity = settings.isOn
+          ? 0.12 +
+            settings.brightness * 0.08 +
+            Math.max(0, Math.cos(beatPhase)) * 0.08
+          : 0;
       }
     }
 
@@ -325,6 +336,21 @@ export default function DiscoBallSection() {
         floorRing.position.y = -1.35;
         scene.add(floorRing);
         disposableResources.push(floorRingGeometry, floorRingMaterial);
+
+        const softRingGeometry = new TorusGeometry(1.18, 0.02, 12, 96);
+        const softRingMaterial = new MeshBasicMaterial({
+          color: "#ff1688",
+          transparent: true,
+          opacity: 0,
+          side: DoubleSide,
+          depthWrite: false,
+          blending: AdditiveBlending,
+        });
+        softRing = new Mesh(softRingGeometry, softRingMaterial);
+        softRing.position.copy(discoBall.position);
+        softRing.rotation.x = Math.PI * 0.3;
+        scene.add(softRing);
+        disposableResources.push(softRingGeometry, softRingMaterial);
 
         const target = new Vector3(0, 0.25, 0);
         const lightOrigins = [
