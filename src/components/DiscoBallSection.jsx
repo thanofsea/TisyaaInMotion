@@ -91,6 +91,7 @@ export default function DiscoBallSection() {
     let lightRig;
     let discoBall;
     let discoAura;
+    let glowLights = [];
     let spotlights = [];
     let beams = [];
     const disposableResources = [];
@@ -110,33 +111,46 @@ export default function DiscoBallSection() {
       const beatDuration = 60000 / settings.bpm;
       const beatPhase = ((time % beatDuration) / beatDuration) * Math.PI * 2;
 
+      const pulseBoost = settings.isOn
+        ? 0.7 + Math.max(0.1, Math.cos(beatPhase)) * 0.8
+        : 0;
+
       spotlights.forEach((spotlight, index) => {
         const phase = beatPhase - (index * Math.PI * 2) / spotlights.length;
-        const pulse = 0.12 + 0.88 * Math.pow(Math.max(0, Math.cos(phase)), 12);
+        const pulse = 0.18 + 0.82 * Math.pow(Math.max(0, Math.cos(phase)), 8);
         const color = settings.colors[index];
         spotlight.color.set(color);
         spotlight.intensity = settings.isOn
-          ? 5.5 * settings.brightness * pulse
+          ? 4.8 * settings.brightness * pulse
           : 0;
         beams[index].material.color.set(color);
         beams[index].material.opacity = settings.isOn
-          ? 0.16 * settings.brightness * pulse
+          ? 0.1 + settings.brightness * 0.18 * pulse
           : 0;
+      });
+
+      glowLights.forEach((light, index) => {
+        const color = settings.colors[index % settings.colors.length];
+        light.color.set(color);
+        light.intensity = settings.isOn
+          ? 18 * settings.brightness * (0.5 + pulseBoost)
+          : 0;
+        light.distance = settings.isOn ? 5.2 + settings.brightness * 2.4 : 0;
       });
 
       if (discoBall) {
         const glowColor = settings.colors[0];
-        discoBall.material.emissive.set(settings.isOn ? glowColor : "#1a1117");
+        discoBall.material.emissive.set(settings.isOn ? glowColor : "#12090e");
         discoBall.material.emissiveIntensity = settings.isOn
-          ? settings.brightness * (0.65 + beatPhase * 0.2)
-          : 0.08;
+          ? 2.2 * settings.brightness + pulseBoost * 2.7
+          : 0.06;
       }
 
       if (discoAura) {
         const auraColor = settings.colors[0];
         discoAura.material.color.set(settings.isOn ? auraColor : "#0d090d");
         discoAura.material.opacity = settings.isOn
-          ? 0.18 + settings.brightness * 0.28 + (Math.cos(beatPhase) + 1) * 0.12
+          ? 0.32 + settings.brightness * 0.4 + (Math.cos(beatPhase) + 1) * 0.18
           : 0;
       }
     }
@@ -227,17 +241,32 @@ export default function DiscoBallSection() {
         const ballGeometry = new SphereGeometry(1.02, 48, 32);
         const ballMaterial = new MeshPhysicalMaterial({
           map: mirrorTexture,
-          metalness: 0.68,
-          roughness: 0.24,
-          clearcoat: 0.72,
-          clearcoatRoughness: 0.18,
-          emissive: "#111016",
-          emissiveIntensity: 0.12,
+          color: "#111118",
+          metalness: 0.92,
+          roughness: 0.1,
+          clearcoat: 1,
+          clearcoatRoughness: 0.08,
+          emissive: "#ff1688",
+          emissiveIntensity: 0.1,
+          transparent: true,
+          opacity: 0.9,
         });
         discoBall = new Mesh(ballGeometry, ballMaterial);
         discoBall.position.y = 0.25;
         scene.add(discoBall);
         disposableResources.push(ballGeometry, ballMaterial);
+
+        const glowOffsets = [
+          new Vector3(0.8, 0.4, 1.3),
+          new Vector3(-1.0, -0.15, 1.1),
+          new Vector3(0.3, 1.25, -1.2),
+        ];
+        glowOffsets.forEach((offset, index) => {
+          const glowLight = new PointLight(initialColors[index], 0, 8, 2);
+          glowLight.position.copy(offset);
+          scene.add(glowLight);
+          glowLights.push(glowLight);
+        });
 
         const floorRingGeometry = new TorusGeometry(1.58, 0.012, 5, 96);
         const floorRingMaterial = new MeshBasicMaterial({
@@ -251,7 +280,7 @@ export default function DiscoBallSection() {
         scene.add(floorRing);
         disposableResources.push(floorRingGeometry, floorRingMaterial);
 
-        const auraGeometry = new SphereGeometry(1.34, 32, 24);
+        const auraGeometry = new SphereGeometry(1.48, 32, 24);
         const auraMaterial = new MeshBasicMaterial({
           color: "#ff1688",
           transparent: true,
